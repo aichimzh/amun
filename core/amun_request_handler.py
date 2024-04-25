@@ -56,6 +56,16 @@ class amun_reqhandler(asynchat.async_chat):
 		self.proxyResult = None
 		self.sendRequest = ""
 		self.log_obj = amun_logging.amun_logging("amun_request_handler", divLogger['requestHandler'])
+		self.logger = logging.getLogger('connection_logger')
+		self.logger.setLevel(logging.DEBUG)
+		log_file = 'ConnectionDuration.log'
+		file_handler = logging.FileHandler(log_file)
+		file_handler.setLevel(logging.DEBUG)
+		if not self.logger.handlers:
+			self.logger.addHandler(file_handler)
+		self.divLogger = divLogger
+		self.start_time = time.time()
+		self.end_time = None
 
 	def __del__(self):
 		pass
@@ -144,6 +154,14 @@ class amun_reqhandler(asynchat.async_chat):
 			raise
 
 	def handle_close(self):
+		self.end_time = time.time()
+		duration = self.end_time - self.start_time
+		msg = "Remote IP: {}, Remote port: {}, Own port: {}, ConnectionDuration: {} seconds".format(self.remote_ip,
+																									self.remote_port,
+																									self.own_port,
+																									duration)
+		print(msg)
+		self.logger.debug("({}),".format(msg))
 		try:
 			self.connected = False
 			try:
