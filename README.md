@@ -12,7 +12,7 @@ more sophisticated emulation and easier maintenance.
 
 ## Installation
 
-* Clone Git repository: `git clone https://github.com/zeroq/amun.git`
+* Clone Git repository: `git clone -b Amun-lyz https://github.com/aichimzh/amun.git`
 * Edit Amun main configuration file: `vim conf/amun.conf`
   * for example set the ip address for Amun to listen on (0.0.0.0 to listen on all)
   * enable or disbale vulnerability modules as needed
