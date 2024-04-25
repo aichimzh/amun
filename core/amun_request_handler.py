@@ -14,7 +14,8 @@ try:
 	from psyco.classes import *
 except ImportError:
 	pass
-
+	
+import logging
 import asynchat
 import StringIO
 import traceback
