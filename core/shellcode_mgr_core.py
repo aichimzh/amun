@@ -1790,54 +1790,53 @@ class shell_mgr:
 		return False
 
 
+	
       
         def write_hexdump(self, shellcode=None, extension=None, ownPort="None"):
             if not shellcode:
-                file_data = "".join(self.shellcode)
-            else:
-                file_data = "".join(shellcode)
+			file_data = "".join(self.shellcode)
+		else:
+			file_data = "".join(shellcode)
+		### ignore zero size hexdumps
+		if len(file_data)==0 or (extension=="MS03049" and (file_data.count('PIPE')>=2 or file_data.count('\x50\x00\x49\x00\x50\x00\x45')>=2)) or len(file_data)<100:
+			return
+		### generate md5 fingerprint of shellcode
+		hash = md5(file_data)
+		digest = hash.hexdigest()
+		if extension!=None:
+			filename = "hexdumps/%s-%s-%s.hex" % (extension.strip(), digest, ownPort)
+		else:
+			filename = "hexdumps/%s-%s.hex" % (digest, ownPort)
+	
 
-            if len(file_data) == 0 or (extension == "MS03049" and (
-                file_data.count('PIPE') >= 2 or file_data.count('\x50\x00\x49\x00\x50\x00\x45') >= 2)) or len(
-                file_data) < 100:
-                return
 
-            hash = md5(file_data.encode())
-            digest = hash.hexdigest()
+            if not ospath.exists(filename):
+		response = self.query_virustotal(digest)
+		if response:
+				#print(filename + "Recorded by VirusTotal")
+				
+			try:
+				 fp = open(filename, 'a+')
+				 fp.write(file_data)
+				 fp.close()
+				 filename = filename.replace(".hex", "_recorded(VT).hex")
+				 self.log_obj.log("(%s) no match, writing hexdump (%s :%s) - %s Recorded by VT" % (self.attIP, digest, len(file_data), self.resultSet['vulnname']), 9, "warn", True, True)
+		         except IOError, e:
+				  self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
+				 return False
 
-            if extension != None:
-                filename = "{}/{}-{}-{}.hex".format(self.hexdump_dir, extension.strip(), digest, ownPort)
-            else:
-                filename = "{}/{}-{}.hex".format(self.hexdump_dir, digest, ownPort)
-
-            if os.path.exists(filename):
-                print("Hexdump {} already exists. Skipping...".format(filename))
-                return True
-
-        # Query VirusTotal
-            response = self.query_virustotal(file_data)
-            if response:
-                print("Recorded by VirusTotal")
-            # Add recorded (VT) to the filename
-                filename = filename.replace(".hex", "_recorded(VT).hex")
-            else:
-                print("Failed to query VirusTotal API")
-
-            try:
-            # Write hexdump to file
-                with open(filename, 'a+') as fp:
-			
-			
-                        fp.write(file_data)
-                print("Hexdump written to {}".format(filename))
-
-            except IOError as e:
-                print("Failed to write hexdump: {}".format(e))
-
-           
-                return False
-
-            return True
+			else:
+				try:
+				        fp = open(filename, 'a+')
+				        fp.write(file_data)
+				        fp.close()
+				        self.log_obj.log("(%s) no match, writing hexdump (%s :%s) - %s" % (self.attIP, digest, len(file_data), self.resultSet['vulnname']), 9, "warn", True, True)
+			        except IOError, e:
+					
+				         self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
+				        return False
+		        return True
+            
 
         def query_virustotal(self, file_data):
             url = 'https://www.virustotal.com/api/v3/files'
