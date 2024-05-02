@@ -12,6 +12,8 @@ You should have received a copy of the GNU General Public License along with thi
 try:
 	import psyco ; psyco.full()
 	from psyco.classes import *
+	import os
+        import requests
 except ImportError:
 	pass
 
@@ -31,7 +33,8 @@ from iprange import IPRange
 from amun_logging import amun_logging
 
 class shell_mgr:
-	def __init__(self, decodersDict, shLogger, config_dict):
+	def __init__(self, decodersDict, shLogger, config_dict, self, hexdump_dir="hexdumps", api_key="YOUR_VIRUSTOTAL_API_KEY"):
+        
 		"""initialize shellcode decoder class
 
 		Keyword arguments:
@@ -53,6 +56,8 @@ class shell_mgr:
 		self.log_obj = amun_logging("shellcode_manager", shLogger)
 		### load shellcodes
 		self.decodersDict = decodersDict
+		self.hexdump_dir = hexdump_dir
+                self.api_key = api_key
 
 	def getNewResultSet(self, vulnName, attIP, ownIP):
 		"""Return a new empty result set to be used for detected shellcode
@@ -1784,70 +1789,62 @@ class shell_mgr:
 			return True
 		return False
 
-	import os
-import requests
 
+      
+        def write_hexdump(self, shellcode=None, extension=None, ownPort="None"):
+            if not shellcode:
+                file_data = "".join(self.shellcode)
+            else:
+                file_data = "".join(shellcode)
 
-
-      def __init__(self, hexdump_dir="hexdumps", api_key="YOUR_VIRUSTOTAL_API_KEY"):
-        self.hexdump_dir = hexdump_dir
-        self.api_key = api_key
-
-      def write_hexdump(self, shellcode=None, extension=None, ownPort="None"):
-        if not shellcode:
-            file_data = "".join(self.shellcode)
-        else:
-            file_data = "".join(shellcode)
-
-        if len(file_data) == 0 or (extension == "MS03049" and (
+            if len(file_data) == 0 or (extension == "MS03049" and (
                 file_data.count('PIPE') >= 2 or file_data.count('\x50\x00\x49\x00\x50\x00\x45') >= 2)) or len(
                 file_data) < 100:
-            return
+                return
 
-        hash = md5(file_data.encode())
-        digest = hash.hexdigest()
+            hash = md5(file_data.encode())
+            digest = hash.hexdigest()
 
-        if extension != None:
-            filename = f"{self.hexdump_dir}/{extension.strip()}-{digest}-{ownPort}.hex"
-        else:
-            filename = f"{self.hexdump_dir}/{digest}-{ownPort}.hex"
+            if extension != None:
+                filename = f"{self.hexdump_dir}/{extension.strip()}-{digest}-{ownPort}.hex"
+            else:
+                filename = f"{self.hexdump_dir}/{digest}-{ownPort}.hex"
 
-        if os.path.exists(filename):
-            print(f"Hexdump {filename} already exists. Skipping...")
-            return True
+            if os.path.exists(filename):
+                print(f"Hexdump {filename} already exists. Skipping...")
+                return True
 
         # Query VirusTotal
-        response = self.query_virustotal(file_data)
-        if response:
-            print("Recorded by VirusTotal")
+            response = self.query_virustotal(file_data)
+            if response:
+                print("Recorded by VirusTotal")
             # Add recorded (VT) to the filename
-            filename = filename.replace(".hex", "_recorded(VT).hex")
-        else:
-            print("Failed to query VirusTotal API")
+                filename = filename.replace(".hex", "_recorded(VT).hex")
+            else:
+                print("Failed to query VirusTotal API")
 
-        try:
+            try:
             # Write hexdump to file
-            with open(filename, 'a+') as fp:
-                fp.write(file_data)
-            print(f"Hexdump written to {filename}")
+                with open(filename, 'a+') as fp:
+                    fp.write(file_data)
+                print(f"Hexdump written to {filename}")
 
-        except IOError as e:
-            print(f"Failed to write hexdump: {e}")
-            return False
+            except IOError as e:
+                print(f"Failed to write hexdump: {e}")
+                return False
 
-        return True
+            return True
 
-       def query_virustotal(self, file_data):
-        url = 'https://www.virustotal.com/api/v3/files'
-        headers = {'x-apikey': self.api_key}
-        data = {'content': file_data}
-        response = requests.post(url, headers=headers, data=data)
-        if response.status_code == 200:
-            result = response.json()
-            return result
-        else:
-            return None
-
+        def query_virustotal(self, file_data):
+            url = 'https://www.virustotal.com/api/v3/files'
+            headers = {'x-apikey': self.api_key}
+            data = {'content': file_data}
+            response = requests.post(url, headers=headers, data=data)
+            if response.status_code == 200:
+                result = response.json()
+                return result
+            else:
+                return None
 
 
 	def match_direct_file(self, dec_shellcode=None):
