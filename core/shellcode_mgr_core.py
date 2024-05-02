@@ -1806,12 +1806,12 @@ class shell_mgr:
             digest = hash.hexdigest()
 
             if extension != None:
-                filename = f"{self.hexdump_dir}/{extension.strip()}-{digest}-{ownPort}.hex"
+                filename = "{}/{}-{}-{}.hex".format(self.hexdump_dir, extension.strip(), digest, ownPort)
             else:
-                filename = f"{self.hexdump_dir}/{digest}-{ownPort}.hex"
+                filename = "{}/{}-{}.hex".format(self.hexdump_dir, digest, ownPort)
 
             if os.path.exists(filename):
-                print(f"Hexdump {filename} already exists. Skipping...")
+                print("Hexdump {} already exists. Skipping...".format(filename))
                 return True
 
         # Query VirusTotal
@@ -1826,11 +1826,15 @@ class shell_mgr:
             try:
             # Write hexdump to file
                 with open(filename, 'a+') as fp:
-                    fp.write(file_data)
-                print(f"Hexdump written to {filename}")
+			
+			
+                        fp.write(file_data)
+                print("Hexdump written to {}".format(filename))
 
             except IOError as e:
-                print(f"Failed to write hexdump: {e}")
+                print("Failed to write hexdump: {}".format(e))
+
+           
                 return False
 
             return True
