@@ -33,7 +33,7 @@ from iprange import IPRange
 from amun_logging import amun_logging
 
 class shell_mgr:
-	def __init__(self, decodersDict, shLogger, config_dict, self, hexdump_dir="hexdumps", api_key="YOUR_VIRUSTOTAL_API_KEY"):
+	def __init__(self, decodersDict, shLogger, config_dict, hexdump_dir="hexdumps", api_key="YOUR_VIRUSTOTAL_API_KEY"):
         
 		"""initialize shellcode decoder class
 
@@ -1821,11 +1821,11 @@ class shell_mgr:
 				 fp.close()
 				 filename = filename.replace(".hex", "_recorded(VT).hex")
 				 self.log_obj.log("(%s) no match, writing hexdump (%s :%s) - %s Recorded by VT" % (self.attIP, digest, len(file_data), self.resultSet['vulnname']), 9, "warn", True, True)
-		         except IOError, e:
+		        except IOError, e:
 				  self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
 				 return False
 
-			else:
+		else:
 				try:
 				        fp = open(filename, 'a+')
 				        fp.write(file_data)
@@ -1833,9 +1833,13 @@ class shell_mgr:
 				        self.log_obj.log("(%s) no match, writing hexdump (%s :%s) - %s" % (self.attIP, digest, len(file_data), self.resultSet['vulnname']), 9, "warn", True, True)
 			        except IOError, e:
 					
-				         self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
+				        self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
+
+			
 				        return False
-		        return True
+
+		    
+		return True
             
 
         def query_virustotal(self, file_data):
