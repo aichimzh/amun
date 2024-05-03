@@ -1824,7 +1824,7 @@ class shell_mgr:
 		        except IOError, e:
 				  self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
 				
-				return False
+			return False
 
 		else:
 				try:
@@ -1837,7 +1837,7 @@ class shell_mgr:
 				        self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
 
 			
-				        return False
+				return False
 
 		    
 		return True
