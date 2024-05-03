@@ -1843,10 +1843,10 @@ class shell_mgr:
 		return True
             
 
-        def query_virustotal(self, file_data):
+        def query_virustotal(self, digest):
             url = 'https://www.virustotal.com/api/v3/files'
             headers = {'x-apikey': self.api_key}
-            data = {'content': file_data}
+            data = {'content': digest}
             response = requests.post(url, headers=headers, data=data)
             if response.status_code == 200:
                 result = response.json()
