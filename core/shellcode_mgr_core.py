@@ -1823,7 +1823,8 @@ class shell_mgr:
 				 self.log_obj.log("(%s) no match, writing hexdump (%s :%s) - %s Recorded by VT" % (self.attIP, digest, len(file_data), self.resultSet['vulnname']), 9, "warn", True, True)
 		        except IOError, e:
 				  self.log_obj.log("(%s) failed writing hexdump (%s) (%s :%s) - %s" % (self.attIP, e, digest, len(file_data), self.resultSet['vulnname']), 9, "crit", True, True)
-				 return False
+				
+				return False
 
 		else:
 				try:
