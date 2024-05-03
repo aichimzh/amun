@@ -1801,8 +1801,8 @@ class shell_mgr:
 	    if len(file_data)==0 or (extension=="MS03049" and (file_data.count('PIPE')>=2 or file_data.count('\x50\x00\x49\x00\x50\x00\x45')>=2)) or len(file_data)<100:
 			return
 		### generate md5 fingerprint of shellcode
-		hash = md5(file_data)
-		digest = hash.hexdigest()
+	    hash = md5(file_data)
+	    digest = hash.hexdigest()
 	    if extension!=None:
 			filename = "hexdumps/%s-%s-%s.hex" % (extension.strip(), digest, ownPort)
 	    else:
