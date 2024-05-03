@@ -28,7 +28,7 @@ from base64 import decodestring, b64encode
 from sys import exit, stdout
 from StringIO import StringIO
 import traceback
-
+import requests
 from iprange import IPRange
 from amun_logging import amun_logging
 
