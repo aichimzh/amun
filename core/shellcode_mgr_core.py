@@ -33,7 +33,7 @@ from iprange import IPRange
 from amun_logging import amun_logging
 
 class shell_mgr:
-	def __init__(self, decodersDict, shLogger, config_dict, hexdump_dir="hexdumps", api_key="YOUR_VIRUSTOTAL_API_KEY"):
+	def __init__(self, decodersDict, shLogger, config_dict, hexdump_dir="hexdumps", api_key="04ab6e91bbeb5e9b45df352215fdd4927ae5e8e8ac5275d653f9516eb1430e39"):
         
 		"""initialize shellcode decoder class
 
@@ -1854,15 +1854,16 @@ class shell_mgr:
                 if response.status_code == 200:
 			
 		        result = True
+			
 
 		
-                return result
+                        return result
                 else:
 			
 		        result = False
 
 		
-                return result
+                        return result
 
 
 	def match_direct_file(self, dec_shellcode=None):
