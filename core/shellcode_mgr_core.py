@@ -1813,7 +1813,8 @@ class shell_mgr:
             if not ospath.exists(filename):
 		response = self.query_virustotal(digest)
 		if response:
-				print(digest + "Recorded by VirusTotal")
+			print(digest + "Recorded by VirusTotal")
+			
 				
 			try:
 				 fp = open(filename, 'a+')
