@@ -33,7 +33,7 @@ from iprange import IPRange
 from amun_logging import amun_logging
 
 class shell_mgr:
-	def __init__(self, decodersDict, shLogger, config_dict, hexdump_dir="hexdumps", api_key="04ab6e91bbeb5e9b45df352215fdd4927ae5e8e8ac5275d653f9516eb1430e39"):
+	def __init__(self, decodersDict, shLogger, config_dict, hexdump_dir="hexdumps"):
         
 		"""initialize shellcode decoder class
 
@@ -57,7 +57,7 @@ class shell_mgr:
 		### load shellcodes
 		self.decodersDict = decodersDict
 		self.hexdump_dir = hexdump_dir
-                self.api_key = api_key
+                
 
 	def getNewResultSet(self, vulnName, attIP, ownIP):
 		"""Return a new empty result set to be used for detected shellcode
@@ -1844,7 +1844,7 @@ class shell_mgr:
 		return True
             
 
-        def query_virustotal(api_key, digest):
+        def query_virustotal(api_key="04ab6e91bbeb5e9b45df352215fdd4927ae5e8e8ac5275d653f9516eb1430e39", digest):
 		
                 url = 'https://www.virustotal.com/api/v3/file/%s' % digest
                 headers = {'x-apikey': api_key}
