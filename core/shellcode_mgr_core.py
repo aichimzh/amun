@@ -1813,7 +1813,7 @@ class shell_mgr:
             if not ospath.exists(filename):
 		response = self.query_virustotal(digest)
 		if response:
-				#print(filename + "Recorded by VirusTotal")
+				print(digest + "Recorded by VirusTotal")
 				
 			try:
 				 fp = open(filename, 'a+')
@@ -1843,16 +1843,18 @@ class shell_mgr:
 		return True
             
 
-        def query_virustotal(self, digest):
-            url = 'https://www.virustotal.com/api/v3/files'
+        def query_virustotal(self.api_key, digest):
+            url = 'https://www.virustotal.com/api/v3/file/%s' % digest
             headers = {'x-apikey': self.api_key}
-            data = {'content': digest}
-            response = requests.post(url, headers=headers, data=data)
+            response = requests.post(url, headers=headers)
             if response.status_code == 200:
-                result = response.json()
+		    result = True
                 return result
             else:
-                return None
+		    result = False
+                return result
+
+	     print(response.status_code)
 
 
 	def match_direct_file(self, dec_shellcode=None):
