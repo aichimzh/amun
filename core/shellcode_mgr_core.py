@@ -1844,18 +1844,18 @@ class shell_mgr:
 		return True
             
 
-        def query_virustotal(self.api_key, digest):
-            url = 'https://www.virustotal.com/api/v3/file/%s' % digest
-            headers = {'x-apikey': self.api_key}
-            response = requests.post(url, headers=headers)
+        def query_virustotal(api_key, digest):
+		
+                url = 'https://www.virustotal.com/api/v3/file/%s' % digest
+                headers = {'x-apikey': api_key}
+                response = requests.get(url, headers=headers)
+	        print(response.status_code)
             if response.status_code == 200:
 		    result = True
                 return result
             else:
 		    result = False
                 return result
-
-	     print(response.status_code)
 
 
 	def match_direct_file(self, dec_shellcode=None):
