@@ -1850,11 +1850,18 @@ class shell_mgr:
                 headers = {'x-apikey': api_key}
                 response = requests.get(url, headers=headers)
 	        print(response.status_code)
-            if response.status_code == 200:
-		    result = True
+		
+                if response.status_code == 200:
+			
+		        result = True
+
+		
                 return result
-            else:
-		    result = False
+                else:
+			
+		        result = False
+
+		
                 return result
 
 
