@@ -1844,9 +1844,9 @@ class shell_mgr:
 		return True
             
 
-        def query_virustotal(digest, api_key="04ab6e91bbeb5e9b45df352215fdd4927ae5e8e8ac5275d653f9516eb1430e39"):
+        def query_virustotal(hash, api_key="04ab6e91bbeb5e9b45df352215fdd4927ae5e8e8ac5275d653f9516eb1430e39"):
 		
-                url = 'https://www.virustotal.com/api/v3/file/%s' % digest
+                url = 'https://www.virustotal.com/api/v3/file/%s' % hash
                 headers = {'x-apikey': api_key}
                 response = requests.get(url, headers=headers)
 	        print(response.status_code)
